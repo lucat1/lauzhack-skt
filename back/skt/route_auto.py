@@ -2,19 +2,15 @@ import aiohttp
 import asyncio
 import uuid
 
-travel_kind = ["routed-car", "routed-foot", "routed-bike"]
+travel_kind = ["routed-car"]#, "routed-foot", "routed-bike"]
 
 async def get_route_to_station(session, method, start_lat, start_lon, end_lat, end_lot):
     url = f"https://routing.openstreetmap.de/{method}/route/v1/driving/{start_lat},{start_lon};{end_lat},{end_lot}?steps=true"
     response = await session.request('GET', url=url)
-
     data = await response.json() 
-    res = {
-        "id": uuid.uuid4().hex,
-        "duration": data["routes"][0]["duration"],
-        "distance": data["routes"][0]["distance"],
-        "legs": None
-    }
+
+    res = convert_sbb(data, method)
+
     return res
 
 
@@ -35,6 +31,45 @@ async def get_all_routes_async(start, end):
 def get_all_routes(start, end):
     return asyncio.run(get_all_routes_async(start, end))
 
+
+def convert_sbb(t, method): 
+    mode = "FOOT"
+    if method == "routed-car":
+        mode == "CAR"
+    if method == "routed-bike":
+        mode == "BIKE"
+
+    res = {
+        "id": uuid.uuid4().hex,
+        "legs": [
+            {
+                "mode": mode,
+                "duration": t["routes"][0]["duration"],
+                "distance": t["routes"][0]["distance"],
+                "points": convert_steps(t["routes"][0]["legs"][0]["steps"])
+            }
+        ]
+    }
+
+    return res
+
+
+def convert_steps(s):
+    result = []
+    #print(s)
+    for step in s:
+        result.append({
+            "place": { 
+                "id": uuid.uuid4().hex,
+                "name": uuid.uuid4().hex,
+                "canton": uuid.uuid4().hex,
+                "lat": step["maneuver"]["location"][0],
+                "long": step["maneuver"]["location"][1],
+            }
+        })
+    
+    return result
+        
 
 
 la1 = 6.566561505148001

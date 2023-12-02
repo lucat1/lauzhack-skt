@@ -1,16 +1,8 @@
 from typing import Dict, List
 from skt.token import token_header
-from json import dumps
 import requests
 
-JOURNEY_API = "https://journey-service-int.api.sbb.ch"
-
-def place(d: Dict) -> Dict:
-    return {
-        "id": d["id"],
-        "name":d["name"],
-        "canton": d["canton"]
-    }
+from skt.const import JOURNEY_API, place
 
 def find_place(name: str, limit: int = 10) -> List[Dict]:
     params = {

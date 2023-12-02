@@ -4,11 +4,12 @@ import { RouterOutlet } from '@angular/router';
 import { SbbButtonModule } from '@sbb-esta/angular/button';
 import { SbbCheckboxModule } from '@sbb-esta/angular/checkbox';
 import { JourneyMapsBasicExample } from './components/map-component/map-component.component';
+import { InputOverviewExample } from './components/input-component/input-component.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet,JourneyMapsBasicExample],
+  imports: [CommonModule, RouterOutlet,JourneyMapsBasicExample,InputOverviewExample],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

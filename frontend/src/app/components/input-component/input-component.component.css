@@ -6,11 +6,12 @@
   
 .inputBox {
     border-radius: 10px;
+    opacity: 0.6;
 }
 
 /* Stili per la versione mobile */
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
   .example-form {
-    margin: 0 10px; /* Margine laterale */
+    margin: 0 10px;
   }
-}
+} */

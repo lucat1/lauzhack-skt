@@ -58,7 +58,7 @@ const ListComponent = () => {
             key={i}
             style={barStyle}
             className={`h-3 rounded w-full flex items-center justify-center bg-${color}-${i}00`}
-          > < /> </div>
+          >  </div>
         );
       })}
       </div>

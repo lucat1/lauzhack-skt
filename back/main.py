@@ -1,7 +1,9 @@
 from flask import Flask, request
+from datetime import datetime
 
 from skt.find_place import find_place
-from skt.token import get_token
+from skt.find_close import find_close
+from skt.plan import plan
 
 app = Flask(__name__)
 
@@ -13,4 +15,8 @@ def hello_world():
         return find_place(request.json["name"])
 
 if __name__ == "__main__":
-    app.run()
+    # print(find_close(47.3769, 8.5417, 100))
+    p1 = find_place("Zurich HB")
+    p2 = find_place("Basel")
+    print(plan(p1[0]["id"], p2[0]["id"], datetime.today()))
+    # app.run()

@@ -7,3 +7,10 @@
 .inputBox {
     border-radius: 10px;
 }
+
+/* Stili per la versione mobile */
+@media screen and (max-width: 600px) {
+  .example-form {
+    margin: 0 10px; /* Margine laterale */
+  }
+}

@@ -6,6 +6,7 @@ import { SbbCheckboxModule } from '@sbb-esta/angular/checkbox';
 import { JourneyMapsBasicExample } from './components/map-component/map-component.component';
 import { InputOverviewExample } from './components/input-component/input-component.component';
 import { ButtonComponentComponent } from './components/button-component/button-component.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent {
 }
 
 @NgModule({
-  imports: [SbbButtonModule, SbbCheckboxModule]
+  
+  imports: [SbbButtonModule, SbbCheckboxModule, BrowserModule]
 })
 export class TrainChooChooAppModule {}

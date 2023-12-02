@@ -25,6 +25,6 @@ class PandR:
 
 #print(data[5]["geopos"])
 
-data = PandR()
+#data = PandR()
 #print(data[5])
-print(len(data.is_in_range({'lon': 7.589562790156525, 'lat': 47.5474120550501}, 1)))
+#print(len(data.is_in_range({'lon': 7.589562790156525, 'lat': 47.5474120550501}, 1)))

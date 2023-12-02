@@ -1,5 +1,5 @@
 from time import time
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 import requests
 
 API_URL = "https://journey-service-int.api.sbb.ch"
@@ -17,13 +17,18 @@ def get_token() -> str:
         return mt[1]
 
     params = {
-        'grant_type': 'client_credentials',
-        'scope': SCOPE,
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET
+        "grant_type": "client_credentials",
+        "scope": SCOPE,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET
     }
-    res = requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token',
-                         data=params).json()
-    token = res['access_token']
-    mt = (now_time() + res['expires_in'], token)
+    res = requests.post("https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token", data=params).json()
+    token = res["access_token"]
+    mt = (now_time() + res["expires_in"], token)
     return token
+
+def token_header() -> Dict:
+    token = get_token()
+    return {
+        "Authorization": f"Bearer {token}"
+    }

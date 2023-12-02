@@ -1,5 +1,6 @@
 from typing import Dict, List
 from datetime import datetime
+from isodate import parse_duration
 from skt.get_token import token_header
 import requests
 
@@ -27,7 +28,7 @@ def to_leg(t: Dict) -> Dict:
     if t["mode"] == "TRAIN" or t["mode"] == "BUS":
         return {
             "mode": t["mode"],
-            "duration": t["duration"],
+            "duration": parse_duration(t["duration"]).total_seconds(),
             "points": list(map(to_point, t["serviceJourney"]["stopPoints"])) if "serviceJourney" in t else []
         }
     elif t["mode"] == "FOOT":

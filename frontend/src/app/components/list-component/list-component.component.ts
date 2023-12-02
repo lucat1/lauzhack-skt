@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
+import { SbbAccordionModule } from '@sbb-esta/angular/accordion';
 
+/**
+ * @title Simple Panel
+ * @order 10
+ */
 @Component({
   selector: 'app-list-component',
-  standalone: true,
-  imports: [],
   templateUrl: './list-component.component.html',
-  styleUrl: './list-component.component.css'
+  standalone: true,
+  imports: [SbbAccordionModule],
 })
-export class ListComponentComponent {
-
+export class AccordionSimplePanelExample {
+  showComponent: boolean = false;
 }

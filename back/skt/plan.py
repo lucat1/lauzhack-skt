@@ -1,6 +1,6 @@
 from typing import Dict, List
 from datetime import datetime
-from skt.token import token_header
+from skt.get_token import token_header
 import requests
 
 from skt.const import JOURNEY_API, place

@@ -156,7 +156,7 @@ typing_extensions~=4.8.0
 tzlocal~=5.2
 urllib3~=1.26.18
 urwid~=2.2.3
-validate-pyproject~=0.13.post1.dev0+gb752273.d20230520
+validate-pyproject==0.13.post1.dev0+gb752273.d20230520
 wcwidth~=0.2.9
 Werkzeug~=2.3.8
 wsproto~=1.2.0

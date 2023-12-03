@@ -4,8 +4,11 @@ export default function DataTime(){
   const [selectedDate, setSelectedDate] = useState('');
   const newDateValue = ''; 
   useEffect(() => {
-    const currentDate = new Date().toISOString().slice(0, 16);
-    setSelectedDate(currentDate);
+    const currentDate = new Date();
+    const offset = currentDate.getTimezoneOffset();
+    const correctedDate = new Date(currentDate.getTime() - (offset * 60 * 1000));
+    const formattedDate = correctedDate.toISOString().slice(0, 16);
+    setSelectedDate(formattedDate);
   }, []);
 
   const handleDateChange = (value) => {

@@ -14,6 +14,9 @@ dependencies:
   '@sbb-esta/journey-maps':
     specifier: ^17.1.1
     version: 17.1.1(@angular/common@17.0.5)(@angular/core@17.0.5)(@types/geojson@7946.0.13)(maplibre-gl@3.6.2)
+  luxon:
+    specifier: ^3.4.4
+    version: 3.4.4
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1707,6 +1710,11 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /luxon@3.4.4:
+    resolution: {integrity: sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==}
+    engines: {node: '>=12'}
+    dev: false
 
   /maplibre-gl@3.6.2:
     resolution: {integrity: sha512-krg2KFIdOpLPngONDhP6ixCoWl5kbdMINP0moMSJFVX7wX1Clm2M9hlNKXS8vBGlVWwR5R3ZfI6IPrYz7c+aCQ==}

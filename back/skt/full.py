@@ -14,7 +14,10 @@ async def fetch_whole_route(session, lat: float, long: float, parking: Dict, des
     sbbs = await plan_async(session, parking["position"]["place"], dumps(dest), datetime.today()) # TODO: plus time the to the parking takes
     for route_to_parking in to_the_parking:
         for sbb in sbbs:
-            routes.append(join_trips(route_to_parking, sbb))
+            if route_to_parking["legs"][0]["distance"] <= 0.0:
+                routes.append(sbb)
+            else:
+                routes.append(join_trips(route_to_parking, sbb))
     return routes
 
 def join_trips(a: Dict, b: Dict) -> Dict:

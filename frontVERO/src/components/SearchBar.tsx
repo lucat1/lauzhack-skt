@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { URL_SEARCH } from "../const";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import DataTime from "./DateTime";
 
 function SearchBar() {
   const [startInput, setStartInput] = useState("");
@@ -151,12 +152,12 @@ function SearchBar() {
             </div>
           )}
         </div>
-
-        {/* Other form elements */}
-        <div className="flex z-1 items-end justify-center">
+                
+        <div className="flex items-center justify-center ">
+        <DataTime></DataTime>
           <button
             type="submit"
-            className="text-white end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
+            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
             onClick={getLocation}
           >
             Search

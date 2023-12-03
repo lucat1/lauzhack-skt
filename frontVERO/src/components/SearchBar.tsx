@@ -12,8 +12,8 @@ function SearchBar() {
   const fetchDataSearch = async (
     input: string,
     setResult: {
-      (value: React.SetStateAction<never[]>): void;
-      (value: React.SetStateAction<never[]>): void;
+      (value: React.SetStateAction<Isearch[]>): void;
+      (value: React.SetStateAction<Isearch[]>): void;
       (arg0: any): void;
     }
   ) => {
@@ -74,6 +74,7 @@ function SearchBar() {
       setArriveResults([]);
     }
   }, [arriveInput]);
+
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -82,7 +83,8 @@ function SearchBar() {
         const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
 
         // Imposta la posizione attuale nell'input "Start"
-        document.getElementById("start-search").value = currentPosition;
+        setArriveInput(currentPosition)
+        // document.getElementById("start-search").value = currentPosition;
       });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -109,7 +111,7 @@ function SearchBar() {
           >
             <FontAwesomeIcon icon={faMapMarkerAlt} />
           </button>{" "}
-          {startResults.length > 0 && (
+          {startResults.length > 1 && (
             <div className="absolute top-full z-40 bg-white rounded shadow-lg w-full">
               {startResults.map((result) => (
                 <div
@@ -135,9 +137,9 @@ function SearchBar() {
             required
           />
 
-          {arriveResults.length > 0 && (
+          {arriveResults.length > 1 && (
             <div className="absolute z-1  top-full bg-white rounded shadow-lg w-full">
-              {arriveResults.map((result) => (
+              { arriveResults.map((result) => (
                 <div
                   key={result.id}
                   onClick={() => handleArriveResultClick(result.name)}

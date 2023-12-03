@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil import parser
 from typing import Union, Tuple, List, Dict
 import aiohttp
 import asyncio
@@ -7,13 +8,17 @@ from skt.range import find_in_range
 from skt.route_auto import get_all_routes_async
 from skt.plan import plan_async
 
-async def fetch_whole_route(session, lat: float, long: float, parking: Dict, dest: str) -> List[Dict]:
+async def fetch_whole_route(session, lat: float, long: float, parking: Dict, dest: str, time: datetime) -> List[Dict]:
     routes = []
     to_the_parking = await get_all_routes_async(session, lat, long, parking["position"]["lat"], parking["position"]["long"])
     pp = parking["position"]["place"]
     place = str(pp) if isinstance(pp, int) else pp
-    sbbs = await plan_async(session, place, str(dest), datetime.today()) # TODO: plus time the to the parking takes
     for route_to_parking in to_the_parking:
+        time_after_parking = parser.parse(time) + timedelta(seconds=route_to_parking["legs"][0]["duration"])
+        time_to_depart = parser.parse(time) - timedelta(seconds=route_to_parking["legs"][0]["duration"])
+        route_to_parking["legs"][0]["points"][0]["departure"] = {"time": time_to_depart}
+        sbbs = await plan_async(session, place, str(dest), time_after_parking)
+
         for sbb in sbbs:
             if route_to_parking["legs"][0]["distance"] <= 0.0:
                 routes.append(sbb)
@@ -40,7 +45,7 @@ async def full_async(origin: Union[str, Tuple[float, float]], destination: str, 
         routes = []
         session = aiohttp.ClientSession()
         for parking in parkings[:4]:
-            routes.append(fetch_whole_route(session, lat, long, parking, destination))
+            routes.append(fetch_whole_route(session, lat, long, parking, destination, time))
         res = await asyncio.gather(*routes, return_exceptions=True)
         await session.close()
         # raise res[0]
@@ -53,15 +58,42 @@ def full(origin: Union[str, Tuple[float, float]], destination: str, time: dateti
 def calc_total_time(route):
     ttime = 0
     for legs in route["legs"]:
+        if legs.get("duration") is None:
+            continue
         ttime += legs["duration"]
+    
+    return ttime
 
+def calc_weight(route, time):
+    last_mode = route["legs"][-1]["mode"]
+    # if last_mode == "FOOT":
+    #     print(route["legs"][-1]["end"]["place"]["time"])
+    #     end_time = route["legs"][-1]["end"]["place"]["time"]
+    # else:
+    #     print(route["legs"][-1])
+    #     end_time = route["legs"][-1]["points"][-1]["place"]["arrival"]["time"]
+    delta_wait = abs((parser.parse(time) - parser.parse(route["legs"][0]["points"][0]["departure"]["time"])).total_seconds())
+    total_time = route["total_duration"]
+    delta_time = (timedelta(seconds=total_time) + timedelta(seconds=delta_wait)).total_seconds()
+    total_changes = len(route["legs"])
+    eco_impact = route["eco_impact"] 
+    
+    rank = delta_time + pow(10, total_changes) + 0*eco_impact
+    #print(rank)
+    return(rank)
 
 def rank(origin: Union[str, Tuple[float, float]], destination: str, time: datetime) -> List[Dict]:
     all_routes = full(origin, destination, time)
 
-    print(calc_total_time(all_routes[0]))
+    #print(calc_total_time(all_routes[0]))
 
     for route in all_routes:
-        pass
         route["total_duration"] = calc_total_time(route)
-    return 
+        route["eco_impact"] = 0
+    
+    for route in all_routes:
+        route["rank_weight"] = calc_weight(route, time)
+    
+    all_routes = sorted(all_routes, key=lambda d: d['rank_weight'])
+
+    return all_routes

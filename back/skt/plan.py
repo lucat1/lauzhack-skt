@@ -16,6 +16,13 @@ def to_point(t: Dict) -> Dict:
             "time": t["departure"].get("timeAimed", None),
             "quay": quay["name"] if quay is not None else None,
         } 
+    if "arrival" in t:
+        quay = t["arrival"].get("quayRt", None)
+        res["arrival"] = {
+            "time": t["arrival"].get("timeAimed", None),
+            "quay": quay["name"] if quay is not None else None,
+        } 
+
     return res
 
 def to_step(t: Dict) -> Dict:

@@ -10,7 +10,11 @@ const Map = () => {
     lang: "en",
   };
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{
+      height: "100vh",
+      position: "relative",
+      top: -50,
+    }}>
       <Ele {...params} />
     </div>
   );

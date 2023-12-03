@@ -56,6 +56,8 @@ def plan(origin: str, destination: str, time: datetime) -> List[Dict]:
         "time": time.strftime("%H:%M"),
     }
     res = requests.post(f"{JOURNEY_API}/v3/trips/by-origin-destination", json=body, headers=token_header()).json()
+    if "trips" not in res:
+        print(res)
     trips = res["trips"]
     # TODO: pagination
     # pagination = res["paginationCursor"]

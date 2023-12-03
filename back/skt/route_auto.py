@@ -2,7 +2,7 @@ import aiohttp
 import asyncio
 import uuid
 
-travel_kind = ["routed-car"]#, "routed-foot", "routed-bike"]
+travel_kind = ["routed-car", "routed-foot", "routed-bike"]
 
 async def get_route_to_station(session, method, start_lat, start_lon, end_lat, end_lot):
     url = f"https://routing.openstreetmap.de/{method}/route/v1/driving/{start_lat},{start_lon};{end_lat},{end_lot}?steps=true"
@@ -14,30 +14,26 @@ async def get_route_to_station(session, method, start_lat, start_lon, end_lat, e
     return res
 
 
-async def get_all_routes_async(start, end):
-    la0 = start.get("lat")
-    lo0 = start.get("lon")
-    la1 = start.get("lat")
-    lo1 = start.get("lon")
+async def get_all_routes_async(la0, lo0, la1, lo1):
     tasks = []
 
     async with aiohttp.ClientSession() as session:
         for kind in travel_kind:
-            tasks.append(get_route_to_station(session, kind, la1, lo1, la, lo))
+            tasks.append(get_route_to_station(session, kind, la0, lo0, la1, lo1))
         results = await asyncio.gather(*tasks, return_exceptions=True)
     
     return results
 
-def get_all_routes(start, end):
-    return asyncio.run(get_all_routes_async(start, end))
+def get_all_routes(lat_start, long_start, lat_end, long_end):
+    return asyncio.run(get_all_routes_async(lat_start, long_start, lat_end, long_end))
 
 
 def convert_sbb(t, method): 
     mode = "FOOT"
     if method == "routed-car":
-        mode == "CAR"
+        mode = "CAR"
     if method == "routed-bike":
-        mode == "BIKE"
+        mode = "BIKE"
 
     res = {
         "id": uuid.uuid4().hex,
@@ -70,13 +66,10 @@ def convert_steps(s):
     
     return result
         
-
-
-la1 = 6.566561505148001
-lo1 = 46.518659400000004
-la = 6.393247037248148
-lo = 46.361350200000004
-start = {"lat": 6.566561505148001, "lon": 46.518659400000004}
-end = {"lat": 6.393247037248148, "lon": 46.361350200000004}
-print(get_all_routes(start, end))
-
+# la1 = 6.566561505148001
+# lo1 = 46.518659400000004
+# la = 6.393247037248148
+# lo = 46.361350200000004
+# start = {"lat": 6.566561505148001, "lon": 46.518659400000004}
+# end = {"lat": 6.393247037248148, "lon": 46.361350200000004}
+# print(get_all_routes(start, end))

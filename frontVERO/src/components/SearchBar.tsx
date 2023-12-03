@@ -107,7 +107,7 @@ function SearchBar() {
           />{" "}
           <button
             type="button"
-            className="absolute inset-y-0 end-0 flex items-center px-3 bg-blue-500 text-white rounded-r-xl hover:bg-blue-600 focus:outline-none"
+            className="absolute inset-y-0 end-0 flex items-center px-3 bg-red-500 text-white rounded-r-xl hover:bg-red-600 focus:outline-none"
             onClick={getLocation}
           >
             <FontAwesomeIcon icon={faMapMarkerAlt} />

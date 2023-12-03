@@ -59,12 +59,19 @@ const ExpandedRoute = ({ data }) => {
             <div className="flex flex-1 flex-col flex-1 py-3 px-2">
               <div className="flex flex-row justify-between">
                 <a>{firstPoint.place.name}</a>
-                <a>{firstPoint.departure?.time.replaceAll("T", " ").slice(0, 16)}</a>
+                <a>{firstPoint.departure?.time.replaceAll("T", " ").slice(0, 16) ||
+                  leg.start?.time.replaceAll("T", " ").slice(0, 16)
+                }</a>
               </div>
               <div className="flex flex-1" />
               {leg.mode != "CAR" && leg.mode != "FOOT" && <a>Ride for {points.length} stops</a>}
               <div className="flex flex-1" />
-              <a>{lastPoint.place.name}</a>
+              <div className="flex flex-row justify-between">
+                <a>{lastPoint.place.name}</a>
+                <a>{lastPoint.arrival?.time.replaceAll("T", " ").slice(0, 16) ||
+                  leg.end?.time.replaceAll("T", " ").slice(0, 16)
+                }</a>
+              </div>
             </div>
           </li>
         </ul>

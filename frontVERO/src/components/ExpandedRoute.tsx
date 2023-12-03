@@ -1,6 +1,5 @@
 import * as React from "react";
 import { FaBus, FaCarSide, FaTrain, FaTrainTram, FaPersonWalking } from "react-icons/fa6";
-import { route } from "../const";
 
 const iconMap = {
   "CAR": FaCarSide,

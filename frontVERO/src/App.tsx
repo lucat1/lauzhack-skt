@@ -16,7 +16,7 @@ function App() {
       <SearchBar setSearchResult={setSearchResult} />
       {
         searchResult && (<>
-          <ListComponent setShowRouteClicked={setShowRouteClicked} />
+          <ListComponent data={searchResult[selectedIndex]} setShowRouteClicked={setShowRouteClicked} />
           {showRouteClicked ? <Map /> : <ExpandedRoute data={searchResult[selectedIndex]} />}
         </>)
       }

@@ -84,7 +84,7 @@ function SearchBar() {
         const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
 
         // Imposta la posizione attuale nell'input "Start"
-        setArriveInput(currentPosition)
+        setStartInput(currentPosition)
         // document.getElementById("start-search").value = currentPosition;
       });
     } else {

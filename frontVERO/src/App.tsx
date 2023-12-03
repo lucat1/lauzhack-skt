@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { API_KEY_MAPS } from "./const";
 import ListComponent from "./components/ListComponent";
 import Map from "./components/Map";
+import RouteComponent from "./components/RouteComponent";
 
 function App() {
   const [token, setToken] = useState<string | null>(null);

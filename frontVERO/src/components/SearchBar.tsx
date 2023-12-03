@@ -9,6 +9,7 @@ function SearchBar() {
   const [arriveInput, setArriveInput] = useState("");
   const [startResults, setStartResults] = useState<Isearch[]>([]);
   const [arriveResults, setArriveResults] = useState<Isearch[]>([]);
+  const [currentLocation, setCurrentLocation] = useState("");
 
   const fetchDataSearch = async (
     input: string,
@@ -83,9 +84,8 @@ function SearchBar() {
         const longitude = position.coords.longitude;
         const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
 
-        // Imposta la posizione attuale nell'input "Start"
-        setStartInput(currentPosition)
-        // document.getElementById("start-search").value = currentPosition;
+        setCurrentLocation(currentPosition); // Salva la posizione nella variabile currentLocation
+        setStartInput("Your Location"); // Imposta "Your Location" nell'input "Start"
       });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -99,10 +99,10 @@ function SearchBar() {
           <input
             type="search"
             id="start-search"
-            placeholder="Start"
+            placeholder={currentLocation ? currentLocation : "Start"}
             value={startInput}
             onChange={handleStartInputChange}
-            className="bg-gray-200 w-full p-3  ps-9 rounded-xl"
+            className="bg-gray-200 w-full p-3 ps-9 rounded-xl"
             required
           />{" "}
           <button
@@ -140,7 +140,7 @@ function SearchBar() {
 
           {arriveResults.length > 1 && (
             <div className="absolute z-1  top-full bg-white rounded shadow-lg w-full">
-              { arriveResults.map((result) => (
+              {arriveResults.map((result) => (
                 <div
                   key={result.id}
                   onClick={() => handleArriveResultClick(result.name)}
@@ -152,13 +152,12 @@ function SearchBar() {
             </div>
           )}
         </div>
-                
+
         <div className="flex items-center justify-center ">
-        <DataTime></DataTime>
+          <DataTime></DataTime>
           <button
             type="submit"
             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
-            onClick={getLocation}
           >
             Search
           </button>{" "}

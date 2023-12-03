@@ -11,7 +11,7 @@ function App() {
       <SearchBar />
       <ListComponent />
     <ExpandedRoute/>
-      {/* <Map /> */}
+      <Map />
     </>
   );
 }

@@ -77,22 +77,31 @@ def calc_weight(route, time):
     delta_time = (timedelta(seconds=total_time) + timedelta(seconds=delta_wait)).total_seconds()
     total_changes = len(route["legs"])
     eco_impact = route["eco_impact"] 
-    
-    rank = delta_time + pow(10, total_changes) + 0*eco_impact
+    rank = delta_time + pow(4, total_changes) + 0*eco_impact
     #print(rank)
-    return(rank)
+    return rank, delta_time
 
 def rank(origin: Union[str, Tuple[float, float]], destination: str, time: datetime) -> List[Dict]:
-    all_routes = full(origin, destination, time)
-
+    all_routes_with_double = full(origin, destination, time)
+    all_routes = []
+    used_time = []
     #print(calc_total_time(all_routes[0]))
 
-    for route in all_routes:
-        route["total_duration"] = calc_total_time(route)
+    for route in all_routes_with_double:
+        myttime = calc_total_time(route)
+        if myttime in used_time:
+           continue
+    
+        used_time.append(myttime)
+        route["total_duration"] = myttime
         route["eco_impact"] = 0
+
+        all_routes.append(route)
     
     for route in all_routes:
-        route["rank_weight"] = calc_weight(route, time)
+        rank, ttime = calc_weight(route, time)
+        route["rank_weight"] = rank
+        route["total_duration"] = ttime
     
     all_routes = sorted(all_routes, key=lambda d: d['rank_weight'])
 

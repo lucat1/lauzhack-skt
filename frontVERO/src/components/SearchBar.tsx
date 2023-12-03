@@ -4,13 +4,49 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import DataTime from "./DateTime";
 
-function SearchBar() {
+interface Iprops {
+  setShowSearchResult: React.Dispatch<React.SetStateAction<boolean>>
+  setSearchResult: any
+}
+
+function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
   const [startInput, setStartInput] = useState("");
   const [arriveInput, setArriveInput] = useState("");
   const [startResults, setStartResults] = useState<Isearch[]>([]);
   const [arriveResults, setArriveResults] = useState<Isearch[]>([]);
   const [currentLocation, setCurrentLocation] = useState("");
+  const [selectedDate, setSelectedDate] = useState('');
 
+  const saveSearchResult = async () =>{
+    console.log("test --> ", startResults)
+    console.log("test2 --> ", arriveResults)
+    console.log("test3 --> ", selectedDate)
+
+    const requestBody = {
+      origin: [startResults[0].long,startResults[0].lat],
+      destination: arriveResults[0].id,
+      time: selectedDate
+    };
+
+    const response = await fetch(`${URL_SEARCH}/plan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log( data)
+      setSearchResult(data);
+      
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  }
+
+// FETCH DATA FROM SEARCH STATION
   const fetchDataSearch = async (
     input: string,
     setResult: {
@@ -83,9 +119,9 @@ function SearchBar() {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
-
-        setCurrentLocation(currentPosition); // Salva la posizione nella variabile currentLocation
-        setStartInput("Your Location"); // Imposta "Your Location" nell'input "Start"
+        
+        setCurrentLocation(currentPosition); 
+        setStartInput("Your Location"); 
       });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -154,12 +190,11 @@ function SearchBar() {
         </div>
 
         <div className="flex items-center justify-center ">
-          <DataTime></DataTime>
+          <DataTime setSelectedDate={setSelectedDate} selectedDate={selectedDate}></DataTime>
           <button
-            type="submit"
             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl disabled:bg-slate-300 hover:disabled:bg-slate-300"
             disabled={startInput.trim() == "" || arriveInput.trim() == ""}
-            onClick={getLocation}
+            onClick={async (e) => { e.preventDefault(); await saveSearchResult(); setShowSearchResult(true) }}
           >
             Search
           </button>{" "}

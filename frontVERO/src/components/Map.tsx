@@ -13,7 +13,7 @@ const Map = () => {
     <div style={{
       height: "100vh",
       position: "relative",
-      top: -50,
+      top: 0,
     }}>
       <Ele {...params} />
     </div>

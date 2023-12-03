@@ -1,7 +1,11 @@
 import React from "react";
 import { FaBus, FaCarSide, FaPersonWalking } from "react-icons/fa6";
 
-const ListComponent = () => {
+interface Iprops {
+  setShowRouteClicked:  React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const ListComponent = ({setShowRouteClicked}: Iprops) => {
   const paths = [
     {
       minute: 5,
@@ -23,7 +27,7 @@ const ListComponent = () => {
   const maxVisiblePaths = 3; // Numero massimo di percorsi da visualizzare
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center" onClick={() => setShowRouteClicked(true)}>
       <ul className="divide-y divide-gray-200 dark:divide-gray-700 bg-white" style={{ zIndex: 100, width: '90vw' }}>
         <li className="pb-3 sm:pb-4 border-2 cursor-pointer rounded" >
           <div className="flex flex-row">

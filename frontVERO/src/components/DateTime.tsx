@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-export default function DataTime(){
-  const [selectedDate, setSelectedDate] = useState('');
+interface Iprops {
+  setSelectedDate: React.Dispatch<React.SetStateAction<string>>
+  selectedDate: string
+}
+
+export default function DataTime({selectedDate,setSelectedDate}:Iprops){
+  // const [selectedDate, setSelectedDate] = useState('');
   const newDateValue = ''; 
   useEffect(() => {
     const currentDate = new Date();

@@ -27,7 +27,6 @@ function SearchBar() {
     setIsFocused(false);
   };
 
-
   return (
     <>
       <form>
@@ -36,9 +35,11 @@ function SearchBar() {
             Search
           </label>
           <div className="relative">
-            <div  className={`absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none ${
+            <div
+              className={`absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none ${
                 isFocused ? "hidden" : ""
-              }`}>
+              }`}
+            >
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
                 aria-hidden="true"
@@ -58,9 +59,13 @@ function SearchBar() {
             <input
               type="search"
               id="default-search"
-              className="bg-gray-200 w-full p-3  ps-9 rounded-xl"
+              className={`bg-gray-200 w-full p-3  ps-9 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                isFocused ? "ring-2 ring-red-500" : ""
+              }`}
               placeholder="Start"
               required
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <button
               type="button"
@@ -68,48 +73,27 @@ function SearchBar() {
               onClick={getLocation}
             >
               <FontAwesomeIcon icon={faMapMarkerAlt} /> {/* Icona */}
-            </button>{" "}
+            </button>
           </div>
-
-          <div className="relative mt-2">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-            </div>
+          <div className="mt-2">
             <input
               type="search"
               id="default-search"
-              className="bg-gray-200 w-full p-3  ps-9 rounded-xl "
+              className={`bg-gray-200 w-full p-3 ps-9 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500`}
               placeholder="Arrive"
-              required
-              onFocus={handleFocus}
-              onBlur={handleBlur}
             />
           </div>
-          <div className="flex  items-end justify-center mt-2 ">
-            <button
-              type="submit"
-              className="text-white end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium   text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-xl"
-              onClick={getLocation}
-            >
-              Search
-            </button>
-          </div>
         </div>
-      </form>
+        <div className="flex  items-end justify-center mt-2 ">
+          <button
+            type="submit"
+            className="text-white end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
+            onClick={getLocation}
+          >
+            Search
+          </button>
+        </div>
+      </form>{" "}
     </>
   );
 }

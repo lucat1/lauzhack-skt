@@ -3,7 +3,7 @@ from typing import Dict
 from flask_cors import CORS
 
 from skt.find_place import find_place
-from skt.full import full
+from skt.full import full, rank
 
 app = Flask(__name__)
 CORS(app)
@@ -18,6 +18,10 @@ def suggestion():
 @app.route("/plan", methods=["POST"])
 def plan():
     return full(request.json["origin"], request.json["destination"], request.json["time"])
+
+@app.route("/plan/ranked", methods=["POST"])
+def plan_ranked():
+    return rank(request.json["origin"], request.json["destination"], request.json["time"])
 
 
 if __name__ == "__main__":

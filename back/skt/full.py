@@ -49,3 +49,19 @@ async def full_async(origin: Union[str, Tuple[float, float]], destination: str, 
 
 def full(origin: Union[str, Tuple[float, float]], destination: str, time: datetime) -> List[Dict]:
     return asyncio.run(full_async(origin, destination, time))
+
+def calc_total_time(route):
+    ttime = 0
+    for legs in route["legs"]:
+        ttime += legs["duration"]
+
+
+def rank(origin: Union[str, Tuple[float, float]], destination: str, time: datetime) -> List[Dict]:
+    all_routes = full(origin, destination, time)
+
+    print(calc_total_time(all_routes[0]))
+
+    for route in all_routes:
+        pass
+        route["total_duration"] = calc_total_time(route)
+    return 

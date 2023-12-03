@@ -1,8 +1,5 @@
 import React from "react";
-import { PiFilmStripThin } from "react-icons/pi";
-import { FaPersonWalking } from "react-icons/fa6";
-import { FaCarSide } from "react-icons/fa";
-import { FaBus } from "react-icons/fa";
+import { FaBus, FaCarSide, FaPersonWalking } from "react-icons/fa6";
 
 const ListComponent = () => {
   const paths = [
@@ -13,13 +10,12 @@ const ListComponent = () => {
     {
       minute: 12,
       icon: FaBus,
-    }, {
+    },
+    {
       minute: 12,
       icon: FaCarSide,
-    }, {
-      minute: 12,
-      icon: PiFilmStripThin,
-    }, {
+    },
+    {
       minute: 12,
       icon: FaBus,
     },

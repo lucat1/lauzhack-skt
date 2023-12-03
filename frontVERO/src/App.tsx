@@ -12,7 +12,7 @@ function App() {
       <NavBar />
       <SearchBar />
       <ListComponent />
-    <ExpandedRoute/>
+      <ExpandedRoute />
       <Map />
     </>
   );

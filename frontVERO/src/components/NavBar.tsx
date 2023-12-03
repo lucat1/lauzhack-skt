@@ -1,7 +1,7 @@
 import React from "react";
 export default function NavBar() {
   return (
-    <div className="flex items-center justify-between p-2 bg-red-600 text-white">
+    <div className="flex items-center justify-start p-2 bg-red-600 text-white">
       <div>
         <svg
           width="48"
@@ -18,6 +18,7 @@ export default function NavBar() {
           />
         </svg>
       </div>
+      <h1><b>SBB CFF FFS </b></h1>
     </div>
   );
 }

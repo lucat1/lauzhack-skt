@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { URL_SEARCH } from "../const";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 function SearchBar() {
-  const [startInput, setStartInput] = useState('');
-  const [arriveInput, setArriveInput] = useState('');
+  const [startInput, setStartInput] = useState("");
+  const [arriveInput, setArriveInput] = useState("");
   const [startResults, setStartResults] = useState<Isearch[]>([]);
   const [arriveResults, setArriveResults] = useState<Isearch[]>([]);
 
-  const fetchDataSearch = async (input: string, setResult: { (value: React.SetStateAction<never[]>): void; (value: React.SetStateAction<never[]>): void; (arg0: any): void; }) => {
+  const fetchDataSearch = async (
+    input: string,
+    setResult: {
+      (value: React.SetStateAction<never[]>): void;
+      (value: React.SetStateAction<never[]>): void;
+      (arg0: any): void;
+    }
+  ) => {
     const requestBody = {
       name: input,
     };
 
     const response = await fetch(`${URL_SEARCH}/suggestion`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
     });
@@ -24,30 +33,34 @@ function SearchBar() {
       const data = await response.json();
       setResult(data);
     } else {
-      console.error('Error:', response.statusText);
+      console.error("Error:", response.statusText);
     }
-  }
+  };
 
-  const handleStartInputChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleStartInputChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setStartInput(event.target.value);
-  }
+  };
 
-  const handleArriveInputChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleArriveInputChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setArriveInput(event.target.value);
-  }
+  };
 
   const handleStartResultClick = (name: React.SetStateAction<string>) => {
     setStartInput(name);
     setStartResults([]);
-  }
+  };
 
   const handleArriveResultClick = (name: React.SetStateAction<string>) => {
     setArriveInput(name);
     setArriveResults([]);
-  }
+  };
 
   useEffect(() => {
-    if (startInput.trim() !== '') {
+    if (startInput.trim() !== "") {
       fetchDataSearch(startInput, setStartResults);
     } else {
       setStartResults([]);
@@ -55,12 +68,26 @@ function SearchBar() {
   }, [startInput]);
 
   useEffect(() => {
-    if (arriveInput.trim() !== '') {
+    if (arriveInput.trim() !== "") {
       fetchDataSearch(arriveInput, setArriveResults);
     } else {
       setArriveResults([]);
     }
   }, [arriveInput]);
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
+
+        // Imposta la posizione attuale nell'input "Start"
+        document.getElementById("start-search").value = currentPosition;
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
 
   return (
     <>
@@ -72,9 +99,16 @@ function SearchBar() {
             placeholder="Start"
             value={startInput}
             onChange={handleStartInputChange}
-            className="block rounded w-full p-4  text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-200 w-full p-3  ps-9 rounded-xl"
             required
-          />
+          />{" "}
+          <button
+            type="button"
+            className="absolute inset-y-0 end-0 flex items-center px-3 bg-blue-500 text-white rounded-r-xl hover:bg-blue-600 focus:outline-none"
+            onClick={getLocation}
+          >
+            <FontAwesomeIcon icon={faMapMarkerAlt} />
+          </button>{" "}
           {startResults.length > 0 && (
             <div className="absolute top-full z-40 bg-white rounded shadow-lg w-full">
               {startResults.map((result) => (
@@ -97,9 +131,10 @@ function SearchBar() {
             placeholder="Arrive"
             value={arriveInput}
             onChange={handleArriveInputChange}
-            className="block  rounded w-full p-4  text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-200 w-full p-3  ps-9 rounded-xl"
             required
           />
+
           {arriveResults.length > 0 && (
             <div className="absolute z-1  top-full bg-white rounded shadow-lg w-full">
               {arriveResults.map((result) => (
@@ -119,10 +154,11 @@ function SearchBar() {
         <div className="flex z-1 items-end justify-center">
           <button
             type="submit"
-            className="text-white z-1 mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-4 py-2"
+            className="text-white end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
+            onClick={getLocation}
           >
             Search
-          </button>
+          </button>{" "}
         </div>
       </form>
     </>

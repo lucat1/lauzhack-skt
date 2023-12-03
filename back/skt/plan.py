@@ -67,6 +67,9 @@ async def plan_async(session, origin: str, destination: str, time: datetime) -> 
     }
     response = await session.request('POST', url=f"{JOURNEY_API}/v3/trips/by-origin-destination", json=body, headers=token_header())
     res = await response.json() 
+    if "trips" not in res:
+        print(body)
+        print(res)
     trips = res["trips"]
     # TODO: pagination
     # pagination = res["paginationCursor"]

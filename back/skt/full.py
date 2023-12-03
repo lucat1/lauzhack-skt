@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Union, Tuple, List, Dict
 import aiohttp
-from json import dumps
 import asyncio
 
 from skt.range import find_in_range
@@ -11,7 +10,9 @@ from skt.plan import plan_async
 async def fetch_whole_route(session, lat: float, long: float, parking: Dict, dest: str) -> List[Dict]:
     routes = []
     to_the_parking = await get_all_routes_async(session, lat, long, parking["position"]["lat"], parking["position"]["long"])
-    sbbs = await plan_async(session, parking["position"]["place"], dumps(dest), datetime.today()) # TODO: plus time the to the parking takes
+    pp = parking["position"]["place"]
+    place = str(pp) if isinstance(pp, int) else pp
+    sbbs = await plan_async(session, place, str(dest), datetime.today()) # TODO: plus time the to the parking takes
     for route_to_parking in to_the_parking:
         for sbb in sbbs:
             if route_to_parking["legs"][0]["distance"] <= 0.0:
@@ -31,7 +32,8 @@ async def full_async(origin: Union[str, Tuple[float, float]], destination: str, 
     # {"origin": "id"} stop id
     if isinstance(origin, str): # an id
         async with aiohttp.ClientSession() as session:
-            return await plan_async(origin, destination, time)
+            print("plan_async2", origin)
+            return await plan_async(session, origin, destination, time)
     else:
         long, lat = origin[0], origin[1]
         parkings = find_in_range(lat, long, 4.0) # TODO: change range
@@ -41,7 +43,7 @@ async def full_async(origin: Union[str, Tuple[float, float]], destination: str, 
             routes.append(fetch_whole_route(session, lat, long, parking, destination))
         res = await asyncio.gather(*routes, return_exceptions=True)
         await session.close()
-        #raise res[0]
+        # raise res[0]
         routes = [item for sublist in res for item in sublist]
         return routes
 

@@ -77,7 +77,7 @@ def calc_weight(route, time):
     delta_time = (timedelta(seconds=total_time) + timedelta(seconds=delta_wait)).total_seconds()
     total_changes = len(route["legs"])
     eco_impact = route["eco_impact"] 
-    rank = delta_time + pow(4, total_changes) + 0*eco_impact
+    rank = delta_time + pow(3, total_changes) + 0*eco_impact
     #print(rank)
     return rank, delta_time
 

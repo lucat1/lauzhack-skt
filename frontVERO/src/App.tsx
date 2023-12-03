@@ -7,18 +7,18 @@ import NavBar from "./components/NavBar";
 import { useState } from "react";
 
 function App() {
-  const [showRouteClicked,setShowRouteClicked] = useState(false)
-  const [showSearchResult,setShowSearchResult] = useState(false)
-  const [searchResult,setSearchResult] = useState()
+  const [showRouteClicked, setShowRouteClicked] = useState(false)
+  const [searchResult, setSearchResult] = useState<any[] | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState(0)
   return (
     <>
-    <NavBar />
-      <SearchBar setSearchResult={setSearchResult} setShowSearchResult={setShowSearchResult}/>
+      <NavBar />
+      <SearchBar setSearchResult={setSearchResult} />
       {
-        showSearchResult ? <ListComponent setShowRouteClicked={setShowRouteClicked}/> : <Map />
-      }
-      {
-        showRouteClicked && <ExpandedRoute/>
+        searchResult && (<>
+          <ListComponent setShowRouteClicked={setShowRouteClicked} />
+          {showRouteClicked ? <Map /> : <ExpandedRoute data={searchResult[selectedIndex]} />}
+        </>)
       }
     </>
   );

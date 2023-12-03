@@ -18,7 +18,8 @@ const color = {
   "FOOT": "slate"
 }
 
-const ExpandedRoute = () => {
+const ExpandedRoute = ({ data }) => {
+  const route = data
   const legs = route.legs;
   const changes = legs.map((leg) => {
     let points;

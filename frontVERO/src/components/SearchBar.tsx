@@ -5,26 +5,26 @@ import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import DataTime from "./DateTime";
 
 interface Iprops {
-  setShowSearchResult: React.Dispatch<React.SetStateAction<boolean>>
   setSearchResult: any
 }
 
-function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
+function SearchBar({ setSearchResult }: Iprops) {
   const [startInput, setStartInput] = useState("");
   const [arriveInput, setArriveInput] = useState("");
   const [startResults, setStartResults] = useState<Isearch[]>([]);
   const [arriveResults, setArriveResults] = useState<Isearch[]>([]);
-  const [currentLocation, setCurrentLocation] = useState("");
+  const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
+  const [selectedArrival, setSelectedArrival] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
 
-  const saveSearchResult = async () =>{
+  const saveSearchResult = async () => {
     console.log("test --> ", startResults)
     console.log("test2 --> ", arriveResults)
     console.log("test3 --> ", selectedDate)
 
     const requestBody = {
-      origin: [startResults[0].long,startResults[0].lat],
-      destination: arriveResults[0].id,
+      origin: currentLocation ? [currentLocation[1], currentLocation[0]] : [startResults[0].long, startResults[0].lat],
+      destination: selectedArrival,
       time: selectedDate
     };
 
@@ -38,15 +38,14 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
 
     if (response.ok) {
       const data = await response.json();
-      console.log( data)
+      console.log(data)
       setSearchResult(data);
-      
     } else {
       console.error("Error:", response.statusText);
     }
   }
 
-// FETCH DATA FROM SEARCH STATION
+  // FETCH DATA FROM SEARCH STATION
   const fetchDataSearch = async (
     input: string,
     setResult: {
@@ -79,6 +78,7 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
     target: { value: React.SetStateAction<string> };
   }) => {
     setStartInput(event.target.value);
+    setCurrentLocation(null);
   };
 
   const handleArriveInputChange = (event: {
@@ -92,8 +92,9 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
     setStartResults([]);
   };
 
-  const handleArriveResultClick = (name: React.SetStateAction<string>) => {
+  const handleArriveResultClick = (name: React.SetStateAction<string>, id: string) => {
     setArriveInput(name);
+    setSelectedArrival(id);
     setArriveResults([]);
   };
 
@@ -118,10 +119,10 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
       navigator.geolocation.getCurrentPosition((position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
-        
-        setCurrentLocation(currentPosition); 
-        setStartInput("Your Location"); 
+
+        setCurrentLocation([latitude, longitude]);
+        setStartInput("geoloc");
+        console.log("done dio cane")
       });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -135,8 +136,8 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
           <input
             type="search"
             id="start-search"
-            placeholder={currentLocation ? currentLocation : "Start"}
-            value={startInput}
+            placeholder={currentLocation ? "Your location" : "Start"}
+            value={!currentLocation ? startInput : ""}
             onChange={handleStartInputChange}
             className="bg-gray-200 w-full p-3 ps-9 rounded-xl"
             required
@@ -179,7 +180,7 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
               {arriveResults.map((result) => (
                 <div
                   key={result.id}
-                  onClick={() => handleArriveResultClick(result.name)}
+                  onClick={() => handleArriveResultClick(result.name, result.id)}
                   className="z-40 cursor-pointer p-2 hover:bg-gray-100"
                 >
                   {result.name}
@@ -194,7 +195,7 @@ function SearchBar({ setShowSearchResult, setSearchResult }: Iprops) {
           <button
             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl disabled:bg-slate-300 hover:disabled:bg-slate-300"
             disabled={startInput.trim() == "" || arriveInput.trim() == ""}
-            onClick={async (e) => { e.preventDefault(); await saveSearchResult(); setShowSearchResult(true) }}
+            onClick={async (e) => { e.preventDefault(); await saveSearchResult() }}
           >
             Search
           </button>{" "}

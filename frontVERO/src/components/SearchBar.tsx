@@ -1,99 +1,130 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useState } from "react";
+import { URL_SEARCH } from "../const";
 
 function SearchBar() {
-  const [isFocused, setIsFocused] = useState(false);
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const currentPosition = `Lat: ${latitude}, Lng: ${longitude}`;
+  const [startInput, setStartInput] = useState('');
+  const [arriveInput, setArriveInput] = useState('');
+  const [startResults, setStartResults] = useState<Isearch[]>([]);
+  const [arriveResults, setArriveResults] = useState<Isearch[]>([]);
 
-        // Imposta la posizione attuale nell'input "Start"
-        document.getElementById("default-search").value = currentPosition;
-      });
+  const fetchDataSearch = async (input: string, setResult: { (value: React.SetStateAction<never[]>): void; (value: React.SetStateAction<never[]>): void; (arg0: any): void; }) => {
+    const requestBody = {
+      name: input,
+    };
+
+    const response = await fetch(`${URL_SEARCH}/suggestion`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setResult(data);
     } else {
-      alert("Geolocation is not supported by this browser.");
+      console.error('Error:', response.statusText);
     }
-  };
+  }
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
+  const handleStartInputChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    setStartInput(event.target.value);
+  }
 
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
+  const handleArriveInputChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    setArriveInput(event.target.value);
+  }
+
+  const handleStartResultClick = (name: React.SetStateAction<string>) => {
+    setStartInput(name);
+    setStartResults([]);
+  }
+
+  const handleArriveResultClick = (name: React.SetStateAction<string>) => {
+    setArriveInput(name);
+    setArriveResults([]);
+  }
+
+  useEffect(() => {
+    if (startInput.trim() !== '') {
+      fetchDataSearch(startInput, setStartResults);
+    } else {
+      setStartResults([]);
+    }
+  }, [startInput]);
+
+  useEffect(() => {
+    if (arriveInput.trim() !== '') {
+      fetchDataSearch(arriveInput, setArriveResults);
+    } else {
+      setArriveResults([]);
+    }
+  }, [arriveInput]);
 
   return (
     <>
-      <form>
-        <div className="p-2 rounded">
-          <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-            Search
-          </label>
-          <div className="relative">
-            <div
-              className={`absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none ${
-                isFocused ? "hidden" : ""
-              }`}
-            >
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />{" "}
-              </svg>
+      <form className="p-2 rounded">
+        <div className="relative mb-4">
+          <input
+            type="search"
+            id="start-search"
+            placeholder="Start"
+            value={startInput}
+            onChange={handleStartInputChange}
+            className="block rounded w-full p-4  text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+          {startResults.length > 0 && (
+            <div className="absolute top-full z-40 bg-white rounded shadow-lg w-full">
+              {startResults.map((result) => (
+                <div
+                  key={result.id}
+                  onClick={() => handleStartResultClick(result.name)}
+                  className="cursor-pointer p-2 hover:bg-gray-100"
+                >
+                  {result.name}
+                </div>
+              ))}
             </div>
-            <input
-              type="search"
-              id="default-search"
-              className={`bg-gray-200 w-full p-3  ps-9 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                isFocused ? "ring-2 ring-red-500" : ""
-              }`}
-              placeholder="Start"
-              required
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 end-0 flex items-center px-3 bg-blue-500 text-white rounded-r-xl hover:bg-blue-600 focus:outline-none"
-              onClick={getLocation}
-            >
-              <FontAwesomeIcon icon={faMapMarkerAlt} /> {/* Icona */}
-            </button>
-          </div>
-          <div className="mt-2">
-            <input
-              type="search"
-              id="default-search"
-              className={`bg-gray-200 w-full p-3 ps-9 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500`}
-              placeholder="Arrive"
-            />
-          </div>
+          )}
         </div>
-        <div className="flex  items-end justify-center mt-2 ">
+
+        <div className="relative">
+          <input
+            type="search"
+            id="arrive-search"
+            placeholder="Arrive"
+            value={arriveInput}
+            onChange={handleArriveInputChange}
+            className="block  rounded w-full p-4  text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+          {arriveResults.length > 0 && (
+            <div className="absolute z-1  top-full bg-white rounded shadow-lg w-full">
+              {arriveResults.map((result) => (
+                <div
+                  key={result.id}
+                  onClick={() => handleArriveResultClick(result.name)}
+                  className="z-40 cursor-pointer p-2 hover:bg-gray-100"
+                >
+                  {result.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Other form elements */}
+        <div className="flex z-1 items-end justify-center">
           <button
             type="submit"
-            className="text-white end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
-            onClick={getLocation}
+            className="text-white z-1 mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-4 py-2"
           >
             Search
           </button>
         </div>
-      </form>{" "}
+      </form>
     </>
   );
 }

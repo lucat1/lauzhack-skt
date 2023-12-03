@@ -8,7 +8,6 @@ const ListComponent = () => {
 
    type DistanceMap = { [key: string]: number };
 
-   const icons = [FaCarSide, FaBus, FaPersonWalking]
    const distances: DistanceMap = {
      red: 50,
      blue: 50,
@@ -58,7 +57,7 @@ const ListComponent = () => {
             key={i}
             style={barStyle}
             className={`h-3 rounded w-full flex items-center justify-center bg-${color}-${i}00`}
-          >  </div>
+          >  ICON </div>
         );
       })}
       </div>

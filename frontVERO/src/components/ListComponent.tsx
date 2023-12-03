@@ -27,6 +27,7 @@ const ListComponent = () => {
   const maxVisiblePaths = 3; // Numero massimo di percorsi da visualizzare
 
   return (
+    <div className="flex justify-center">
     <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
       <li className="pb-3 sm:pb-4 border-2 cursor-pointer" >
         <div className="flex flex-row">
@@ -50,6 +51,7 @@ const ListComponent = () => {
         <div className="flex pl-3 flex-row flex-1">8:44 - 15:54</div>
       </li>
     </ul>
+    </div>
   );
 };
 

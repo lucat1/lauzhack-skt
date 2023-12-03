@@ -14,19 +14,14 @@ async def get_route_to_station(session, method, start_lat, start_lon, end_lat, e
     return res
 
 
-async def get_all_routes_async(la0, lo0, la1, lo1):
+async def get_all_routes_async(session, la0, lo0, la1, lo1):
     tasks = []
 
-    async with aiohttp.ClientSession() as session:
-        for kind in travel_kind:
-            tasks.append(get_route_to_station(session, kind, la0, lo0, la1, lo1))
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+    for kind in travel_kind:
+        tasks.append(get_route_to_station(session, kind, la0, lo0, la1, lo1))
+    results = await asyncio.gather(*tasks, return_exceptions=True)
     
     return results
-
-def get_all_routes(lat_start, long_start, lat_end, long_end):
-    return asyncio.run(get_all_routes_async(lat_start, long_start, lat_end, long_end))
-
 
 def convert_sbb(t, method): 
     mode = "FOOT"

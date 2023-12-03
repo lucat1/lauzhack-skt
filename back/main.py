@@ -1,11 +1,9 @@
-from datetime import datetime
 from flask import Flask, request
+from typing import Dict
 from flask_cors import CORS
 
 from skt.find_place import find_place
-from skt.plan import plan
-from skt.range import find_in_range
-from skt.route_auto import get_all_routes
+from skt.full import full
 
 app = Flask(__name__)
 CORS(app)
@@ -18,25 +16,9 @@ def suggestion():
         return find_place(request.json["name"])
 
 @app.route("/plan", methods=["POST"])
-def p():
-    # {"origin": [0,0]} coordinate
-    # {"origin": "id"} stop id
-    if isinstance(request.json["origin"], str): # an id
-        return plan(request.json["origin"], request.json["destination"], request.json["time"])
-    else:
-        lat, long = request.json["origin"][1], request.json["origin"][0]
-        parkings = find_in_range(lat, long, 4.0) # TODO: change range
-        routes = []
-        for parking in parkings[:10]: # TODO: Change
-            to_the_parking = get_all_routes(lat, long, parking["position"]["lat"], parking["position"]["long"])
-            sbb = plan(parking["position"]["place"], request.json["destination"], datetime.today()) # TODO: plus time the to the parking takes
-            routes.append([to_the_parking, sbb]) # TODO: merge route
+def plan():
+    return full(request.json["origin"], request.json["destination"], request.json["time"])
 
-        return {
-            "parkings": parkings,
-            "routes": routes
-        }
-    
 
 if __name__ == "__main__":
     # print(find_close(47.3769, 8.5417, 100))

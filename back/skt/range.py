@@ -14,7 +14,7 @@ def to_station(d: Dict) -> Dict:
         "long": d["geopos"]["lon"]
     }
     
-def find_in_range(lat: float, long: float, radius_km: float) -> List[Tuple[float, ]]:
+def find_in_range(lat: float, long: float, radius_km: float) -> List[Dict]:
     res = []
     for station in mobilitat_data:
         mypos = station.get("geopos")

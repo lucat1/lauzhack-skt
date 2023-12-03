@@ -157,7 +157,9 @@ function SearchBar() {
           <DataTime></DataTime>
           <button
             type="submit"
-            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl"
+            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium   text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 rounded-xl disabled:bg-slate-300 hover:disabled:bg-slate-300"
+            disabled={startInput.trim() == "" || arriveInput.trim() == ""}
+            onClick={getLocation}
           >
             Search
           </button>{" "}

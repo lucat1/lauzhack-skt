@@ -52,7 +52,7 @@ def convert_steps(s):
         result.append({
             "place": { 
                 "id": uuid.uuid4().hex,
-                "name": uuid.uuid4().hex,
+                "name": "-",
                 "canton": uuid.uuid4().hex,
                 "lat": step["maneuver"]["location"][0],
                 "long": step["maneuver"]["location"][1],
